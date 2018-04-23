@@ -16,9 +16,20 @@ object TimeExpression {
     def isRecurringOn(localDate: LocalDate): Boolean = howToEvaluate(localDate)
   }
 
-
   private[TimeExp] def evalDiffDay( from: LocalDate, local: LocalDate):Long =
     DAYS.between(from, local)
+
+  private[TimeExp] def isFirstDayOfTheMonth( localDate: LocalDate) =
+    localDate.getDayOfMonth < 7
+
+
+  private[TimeExp] def isLastDayOfTheMonth( localDate: LocalDate) =
+    localDate.getDayOfMonth +7 > localDate.lengthOfMonth
+
+
+  private[TimeExp] def getWeekOfTheMonth( from: LocalDate):Int =
+    from.get(WeekFields.ISO.weekOfMonth())
+
 
   /**
     * This expression matches on the date of parameter value.
@@ -43,19 +54,6 @@ object TimeExpression {
     )
   }
 
-
-  private[TimeExp] def isFirstDayOfTheMonth( localDate: LocalDate) = {
-    localDate.getDayOfMonth < 7
-  }
-
-  private[TimeExp] def isLastDayOfTheMonth( localDate: LocalDate) = {
-    localDate.getDayOfMonth +7 > localDate.lengthOfMonth
-  }
-
-  private[TimeExp] def getWeekOfTheMonth( from: LocalDate):Int = {
-    val weekFields =WeekFields.ISO
-    from.get(weekFields.weekOfMonth())
-  }
 
   def monthlyEvery(amountOfMonth: Int, dayOfWeek: DayOfWeek, weekOfMonth: Int, fromYearMonth: YearMonth): TimeExpression = {
     require( weekOfMonth ==1 || weekOfMonth >=4 )//accept only first or last week . better use boolean for next version.
